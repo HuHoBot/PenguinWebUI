@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "penguin-webui",
+  "name": "penguinwebui",
   "main": "src/worker/index.ts",
   "compatibility_date": "2026-11-20",
   "compatibility_flags": ["nodejs_compat"],
@@ -11,7 +11,7 @@
     "run_worker_first": ["/api", "/api/*", "/ws", "/ws/*"]
   },
   "vars": {
-    "PUBLIC_ORIGIN": "https://webui.example.com"
+    "PUBLIC_ORIGIN": "https://penguinwebui.huohuas001-e82.workers.dev"
   },
   "durable_objects": {
     "bindings": [
