@@ -5,6 +5,7 @@ export interface ServerStatus {
   connection: string;
   online: string[];
   groups: string[];
+  groupNames?: Record<string, string>;
 }
 
 export interface QrState {
