@@ -287,8 +287,13 @@ function ConfigSection({ name, path, values, stateKey, query, expandedPaths, set
 }) {
   const matches = !query || hasMatchingKey(values, name, path, query);
   const open = expandedPaths.has(stateKey) || !!query && matches;
-  const fieldCount = Object.values(values).reduce<number>((count, value) => count + countConfigFields(value), 0);
-  const enabledCount = countEnabledValues(values);
+  const isCommandSection = name === 'commands';
+  const fieldCount = isCommandSection ? Object.keys(values).length : Object.values(values).reduce<number>((count, value) => count + countConfigFields(value), 0);
+  const fieldCountLabel = isCommandSection ? '条命令' : '项配置';
+  const enabledCount = isCommandSection
+    ? Object.values(values).filter((command) => isObject(command) && command.enable === true).length
+    : countEnabledValues(values);
+  const enabledCountLabel = isCommandSection ? '条命令已启用' : '项已启用';
   return <details className={`config-section ${path.length <= 1 ? 'config-section-root' : ''}`} open={open} onToggle={(event) => {
     const nextOpen = event.currentTarget.open;
     setExpandedPaths((current) => {
@@ -299,7 +304,7 @@ function ConfigSection({ name, path, values, stateKey, query, expandedPaths, set
   }}>
     <summary>
       <span className="config-section-heading"><span className="config-section-title">{labels[name] ?? name}{name !== '基础设置' && <code>{name}</code>}</span>{sectionDescriptions[name] && <small className="config-section-description">{sectionDescriptions[name]}</small>}</span>
-      <span className="config-section-count">{fieldCount} 项配置{enabledCount ? ` · ${enabledCount} 项已启用` : ''}</span>
+      <span className="config-section-count">{fieldCount} {fieldCountLabel}{enabledCount ? ` · ${enabledCount} ${enabledCountLabel}` : ''}</span>
       <span className="config-section-chevron" aria-hidden="true" />
     </summary>
     <div className="config-section-content"><Fields values={values} path={path} query={query} expandedPaths={expandedPaths} setExpandedPaths={setExpandedPaths} disabled={disabled} change={change} reportError={reportError} /></div>
